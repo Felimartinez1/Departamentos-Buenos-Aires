@@ -1,0 +1,5 @@
+/venv310
+.env
+
+/data/Alquileres.csv
+/data/clean_Alquileres.csv

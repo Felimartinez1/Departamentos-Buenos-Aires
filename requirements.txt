@@ -1,0 +1,10 @@
+pandas
+numpy
+scikit-learn
+seaborn
+matplotlib
+selenium
+undetected-chromedriver
+requests
+beautifulsoup4
+yaml
