@@ -1,24 +1,13 @@
 To do:
 
-IDEAS: 
-* Amoblado: Si o no.
-    * Buscar en la descripción palabras claves como amoblado, amoblamiento, muebles, etc etc.
-
-Anto:
-* Scrapear remax
-* URL de cada departamento
-* Antiguedad de departamento (zonaprop y remax)
+Tareas faltantes:
+✅ Deployar power bi
+* Amoblado: Si o no. (Buscar en la descripción o título palabras claves como amoblado, amoblamiento, muebles, etc etc)
+* Mejorar tiempos de los scrapers (si es que es posible)
+* Refactor y modularización de codigo
 
 
-Feli:
-✅ Limpiar columna titulo
-✅ Investigar apis de geolocalización
-✅ Investigar api de tasación de dolar
-* Deployar power bi
-
-
-Nice to have:
+Futuro lejano:
 * Analizar series temporales (almacenar copias de data historica)
 * Automotizar procesos
 * Expandir a otras provincias
-* Landing pag
