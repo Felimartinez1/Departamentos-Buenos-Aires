@@ -3,6 +3,7 @@ To do:
 Tareas faltantes:
 ✅ Deployar power bi
 * Amoblado: Si o no. (Buscar en la descripción o título palabras claves como amoblado, amoblamiento, muebles, etc etc)
+* Mejorar preprocesamiento
 * Mejorar tiempos de los scrapers (si es que es posible)
 * Refactor y modularización de codigo
 
