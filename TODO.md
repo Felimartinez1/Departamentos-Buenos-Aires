@@ -1,14 +1,19 @@
 To do:
 
+IDEAS: 
+* Amoblado: Si o no.
+    * Buscar en la descripción palabras claves como amoblado, amoblamiento, muebles, etc etc.
+
 Anto:
 * Scrapear remax
+* URL de cada departamento
 * Antiguedad de departamento (zonaprop y remax)
 
 
 Feli:
-* Limpiar columna titulo
-* Investigar apis de geolocalización
-* Investigar api de tasación de dolar
+✅ Limpiar columna titulo
+✅ Investigar apis de geolocalización
+✅ Investigar api de tasación de dolar
 * Deployar power bi
 
 
