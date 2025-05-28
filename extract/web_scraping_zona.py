@@ -43,6 +43,9 @@ for url in urls:
         titulo = soup.find("div", class_="section-title")
         valor_alquiler = soup.find("div", class_="price-value")
         expensas = soup.find("span", class_="price-expenses")
+
+        descripcion_div = soup.find("div", id="longDescription")
+
         ubicacion = soup.find("div", class_="section-location-property section-location-property-classified").find("h4")
         direccion = soup.find("div", class_="section-location-property section-location-property-classified").find("h4")
 
@@ -89,6 +92,7 @@ for url in urls:
         datos_lista.append({
             "Link": url,
             "Título": ' '.join(titulo.stripped_strings) if titulo else "No disponible",
+            "Descripción": ' '.join(descripcion_div.stripped_strings) if descripcion_div else "No disponible",
             "Valor Alquiler": ' '.join(valor_alquiler.stripped_strings) if valor_alquiler else "No disponible",
             "Expensas": expensas.text.replace("Expensas:", "").strip() if expensas else "No disponible",
             "Barrio": barrio,

@@ -7,7 +7,7 @@ from selenium.webdriver.common.keys import Keys
 import undetected_chromedriver as uc
 
 
-df = pd.read_csv('LinksPropiedades.csv', sep=';')
+df = pd.read_csv('links_propiedades_remax.csv', sep=';')
 urls = df['Link'].dropna().tolist()
 
 print(f"Probando con {len(urls)} links...")
@@ -71,20 +71,23 @@ for url in urls:
         barrio = extraer_barrio(ubicacion.text) if ubicacion else "No disponible"
 
         
+        descripcion_larga = soup.find("h3", id="last")
+
         datos_lista.append({
-        "Link": url,
-        "Título": titulo.text.strip() if titulo else "No disponible",
-        "Valor Alquiler": valor_alquiler.text.strip() if valor_alquiler else "No disponible",
-        "Expensas": expensas.text.replace("Expensas :", "").strip() if expensas else "No disponible",
-        "Barrio": barrio,
-        "Dirección" : direccion.text.strip() if direccion else "No disponible",
-        "Metros Cuadrados": metros_cuadrados.text.strip() if metros_cuadrados else "0",
-        "Ambientes": ambientes.text.strip() if ambientes else "No disponible",
-        "Dormitorios": dormitorios.text.strip() if dormitorios else "No disponible",
-        "Baños": baños.text.strip() if baños else "No disponible",
-        "Cocheras": cocheras.text.strip() if cocheras else "0",
-        "Años de Antigüedad": años_antiguedad.text.strip() if años_antiguedad else "No disponible",
-        "Coordenadas": coordenadas.text.strip() if coordenadas else "No disponible",
+            "Link": url,
+            "Título": titulo.text.strip() if titulo else "No disponible",
+            "Valor Alquiler": valor_alquiler.text.strip() if valor_alquiler else "No disponible",
+            "Expensas": expensas.text.replace("Expensas :", "").strip() if expensas else "No disponible",
+            "Barrio": barrio,
+            "Dirección": direccion.text.strip() if direccion else "No disponible",
+            "Metros Cuadrados": metros_cuadrados.text.strip() if metros_cuadrados else "0",
+            "Ambientes": ambientes.text.strip() if ambientes else "No disponible",
+            "Dormitorios": dormitorios.text.strip() if dormitorios else "No disponible",
+            "Baños": baños.text.strip() if baños else "No disponible",
+            "Cocheras": cocheras.text.strip() if cocheras else "0",
+            "Años de Antigüedad": años_antiguedad.text.strip() if años_antiguedad else "No disponible",
+            "Coordenadas": coordenadas.text.strip() if coordenadas else "No disponible",
+            "Descripción": descripcion_larga.text.strip() if descripcion_larga else "No disponible",
         })
 
 
@@ -95,5 +98,5 @@ for url in urls:
 
 
 df_resultado = pd.DataFrame(datos_lista)
-df_resultado.to_csv("Prueba.csv", index=False, encoding="utf-8-sig", sep=";")
+df_resultado.to_csv("prueba_remax.csv", index=False, encoding="utf-8-sig", sep=";")
 print("Extracción finalizada.")

@@ -15,7 +15,7 @@ browser = uc.Chrome()
 
 
 url = "https://www.remax.com.ar/listings/rent?page=0&pageSize=24&sort=-createdAt&in:operationId=2&in:eStageId=0,1,2,3,4&in:typeId=1,2,3,4,5,6,7,8&locations=in:CF@%3Cb%3ECapital%3C%2Fb%3E%20%3Cb%3EFederal%3C%2Fb%3E::::::&landingPath=&filterCount=1&viewMode=listViewMode"
-max_paginas = 65
+max_paginas = 1
 x = 0
 
 links_lista = []
@@ -62,14 +62,16 @@ while x <= max_paginas:
         
         for propiedad in propiedades:
             titulo_tag = propiedad.find("p", class_="card__description")
-            if titulo_tag:
+            link_tag = propiedad.find("a", href=True)
+            
+            if titulo_tag and link_tag:
                 titulo = titulo_tag.get_text(strip=True)
-                slug = limpiar_titulo_para_link(titulo)
-                link = f"https://www.remax.com.ar/listings/{slug}"
+                link = "https://www.remax.com.ar" + link_tag["href"]
                 links_lista.append({
                     "Titulo": titulo,
                     "Link": link
                 })
+
        
         x = x + 1        
     else:
