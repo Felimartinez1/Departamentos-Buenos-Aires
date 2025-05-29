@@ -70,8 +70,13 @@ for url in urls:
 
         barrio = extraer_barrio(ubicacion.text) if ubicacion else "No disponible"
 
-        
+        def detectar_amoblado(descripcion):
+            descripcion = descripcion.lower()
+            return int("amobl" in descripcion or "muebl" in descripcion)
+
         descripcion_larga = soup.find("h3", id="last")
+        descripcion = descripcion_larga.text.strip() if descripcion_larga else ""
+        amoblado = detectar_amoblado(descripcion)
 
         datos_lista.append({
             "Link": url,
@@ -87,7 +92,8 @@ for url in urls:
             "Cocheras": cocheras.text.strip() if cocheras else "0",
             "Años de Antigüedad": años_antiguedad.text.strip() if años_antiguedad else "No disponible",
             "Coordenadas": coordenadas.text.strip() if coordenadas else "No disponible",
-            "Descripción": descripcion_larga.text.strip() if descripcion_larga else "No disponible",
+            "Descripción": descripcion,
+            "Amoblado": amoblado,
         })
 
 
