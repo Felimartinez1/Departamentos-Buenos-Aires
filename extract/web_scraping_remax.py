@@ -5,35 +5,28 @@ from bs4 import BeautifulSoup as bs
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import undetected_chromedriver as uc
-
+import numpy as np
 
 df = pd.read_csv('links_propiedades_remax.csv', sep=';')
 urls = df['Link'].dropna().tolist()
 
 print(f"Probando con {len(urls)} links...")
 
-
 browser = uc.Chrome()
-
-
 datos_lista = []
-
 
 for url in urls:
     try:
         browser.get(url)
         time.sleep(random.randint(8, 10))
 
-        
         body = browser.find_element("tag name", "body")
         body.send_keys(Keys.PAGE_DOWN)
         time.sleep(2)
 
-        
         html = browser.page_source
         soup = bs(html, 'lxml')
 
-       
         titulo = soup.find("div", id="title")
         valor_alquiler = soup.find("div", class_="flex-start-center", id="price-container")
         expensas = soup.find("div", class_="flex-start-center", id="expenses-container")
@@ -60,48 +53,38 @@ for url in urls:
 
         coordenadas = soup.find("div", class_="place-name")
 
-
-        
         def extraer_barrio(lugar):
             partes = lugar.split(',')
             if len(partes) >= 2:
                 return partes[-2].strip()
-            return "No disponible"
+            return np.nan
 
-        barrio = extraer_barrio(ubicacion.text) if ubicacion else "No disponible"
-
-        def detectar_amoblado(descripcion):
-            descripcion = descripcion.lower()
-            return int("amobl" in descripcion or "muebl" in descripcion)
+        barrio = extraer_barrio(ubicacion.text) if ubicacion else np.nan
 
         descripcion_larga = soup.find("h3", id="last")
         descripcion = descripcion_larga.text.strip() if descripcion_larga else ""
-        amoblado = detectar_amoblado(descripcion)
 
         datos_lista.append({
             "Link": url,
-            "Título": titulo.text.strip() if titulo else "No disponible",
-            "Valor Alquiler": valor_alquiler.text.strip() if valor_alquiler else "No disponible",
-            "Expensas": expensas.text.replace("Expensas :", "").strip() if expensas else "No disponible",
+            "Título": titulo.text.strip() if titulo else np.nan,
+            "Valor Alquiler": valor_alquiler.text.strip() if valor_alquiler else np.nan,
+            "Expensas": expensas.text.replace("Expensas :", "").strip() if expensas else np.nan,
             "Barrio": barrio,
-            "Dirección": direccion.text.strip() if direccion else "No disponible",
-            "Metros Cuadrados": metros_cuadrados.text.strip() if metros_cuadrados else "0",
-            "Ambientes": ambientes.text.strip() if ambientes else "No disponible",
-            "Dormitorios": dormitorios.text.strip() if dormitorios else "No disponible",
-            "Baños": baños.text.strip() if baños else "No disponible",
-            "Cocheras": cocheras.text.strip() if cocheras else "0",
-            "Años de Antigüedad": años_antiguedad.text.strip() if años_antiguedad else "No disponible",
-            "Coordenadas": coordenadas.text.strip() if coordenadas else "No disponible",
+            "Dirección": direccion.text.strip() if direccion else np.nan,
+            "Metros Cuadrados": metros_cuadrados.text.strip() if metros_cuadrados else np.nan,
+            "Ambientes": ambientes.text.strip() if ambientes else np.nan,
+            "Dormitorios": dormitorios.text.strip() if dormitorios else 0,
+            "Baños": baños.text.strip() if baños else np.nan,
+            "Cocheras": cocheras.text.strip() if cocheras else 0,
+            "Años de Antigüedad": años_antiguedad.text.strip() if años_antiguedad else np.nan,
+            "Coordenadas": coordenadas.text.strip() if coordenadas else np.nan,
             "Descripción": descripcion,
-            "Amoblado": amoblado,
         })
 
-
-        print(f"Extraído título de {url}: {titulo}")
+        print(f"Extraído título de {url}: {titulo.text.strip() if titulo else '[SIN TÍTULO]'}")
 
     except Exception as e:
         print(f"Error en {url}: {e}")
-
 
 df_resultado = pd.DataFrame(datos_lista)
 df_resultado.to_csv("prueba_remax.csv", index=False, encoding="utf-8-sig", sep=";")
