@@ -65,7 +65,6 @@ for url in urls:
         descripcion = descripcion_larga.text.strip() if descripcion_larga else ""
 
         datos_lista.append({
-            "Link": url,
             "Título": titulo.text.strip() if titulo else np.nan,
             "Valor Alquiler": valor_alquiler.text.strip() if valor_alquiler else np.nan,
             "Expensas": expensas.text.replace("Expensas :", "").strip() if expensas else np.nan,
@@ -79,6 +78,7 @@ for url in urls:
             "Años de Antigüedad": años_antiguedad.text.strip() if años_antiguedad else np.nan,
             "Coordenadas": coordenadas.text.strip() if coordenadas else np.nan,
             "Descripción": descripcion,
+            "Link": url, ### SIEMPRE DEJAR LINK AL FINAL
         })
 
         print(f"Extraído título de {url}: {titulo.text.strip() if titulo else '[SIN TÍTULO]'}")

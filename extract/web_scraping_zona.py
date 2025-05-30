@@ -77,7 +77,6 @@ for url in urls:
         barrio = extraer_barrio(' '.join(ubicacion.stripped_strings)) if ubicacion else np.nan
 
         datos_lista.append({
-            "Link": url,
             "Título": ' '.join(titulo.stripped_strings) if titulo else np.nan,
             "Descripción": ' '.join(descripcion_div.stripped_strings) if descripcion_div else np.nan,
             "Valor Alquiler": ' '.join(valor_alquiler.stripped_strings) if valor_alquiler else np.nan,
@@ -89,8 +88,9 @@ for url in urls:
             "Dormitorios": dormitorios,
             "Baños": baños,
             "Cocheras": cocheras,
-            "Años de Antigüedad": años_antiguedad,
+            "Años de Antigüedad": años_antiguedad, 
             "Coordenadas": ' '.join(coordenadas.stripped_strings) if coordenadas else np.nan,
+            "Link": url, ### SIEMPRE DEJAR LINK AL FINAL
         })
 
         print(f"Extraído título de {url}: {' '.join(titulo.stripped_strings) if titulo else '[SIN TÍTULO]'}")
