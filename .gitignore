@@ -1,4 +1,7 @@
 /venv310
 .env
 
+*.csv
 /data/*.csv
+
+__pycache__

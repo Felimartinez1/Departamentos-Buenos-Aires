@@ -6,9 +6,11 @@ Tareas faltantes:
 ✅ Mejorar preprocesamiento
 ✅ Mejorar tiempos de los scrapers (si es que es posible)
 ✅ Manejar nulos en dormitorios y cochera
-* Eliminar duplicados entre zonaprop y remax
-* Mejorar predictor de Expensas (antiguedad puede ayudar)
-* Refactor y modularización de codigo
+✅ Eliminar duplicados entre zonaprop y remax
+✅ Mejorar predictor de Expensas (antiguedad puede ayudar)
+✅ Refactor y modularización de codigo
+* Implementación de archivo de configuración
+* Inferencia en scraper (pueden ser aprox 6 horas) y preprocessing
 * Visualización en power bi
 
 
