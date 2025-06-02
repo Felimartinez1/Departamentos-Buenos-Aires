@@ -45,13 +45,13 @@ def create_browser_zona(headless=False):
     tmp_profile = tempfile.mkdtemp(prefix="uc_profile_")
     options = uc.ChromeOptions()
     options.add_argument(f"--user-data-dir={tmp_profile}")
-    
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-blink-features=AutomationControlled")
     if headless:
         # "--headless" en Chrome 109+ puede requerir "--headless=new", pero se deja sin especificar "new" para compatibilidad.
         options.add_argument("--headless=new")
     # Bloquear recargas innecesarias o configuraciones extra (si quisieras acelerar más)
-    # options.add_argument("--disable-gpu")
-    # options.add_argument("--no-sandbox")
+    options.add_argument("--disable-gpu")
     
     # Habilitamos soporte para múltiples procesos:
     return uc.Chrome(
@@ -89,13 +89,6 @@ def create_browser_remax(headless=True, driver_path=None):
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--enable-unsafe-swiftshader")
 
-    # Bloquear imágenes y CSS para acelerar la carga
-    prefs = {
-        "profile.managed_default_content_settings.images": 2,
-        "profile.managed_default_content_settings.stylesheets": 2
-    }
-    options.add_experimental_option("prefs", prefs)
-
     if driver_path:
         # Forzamos a que NO ejecute Selenium Manager
         service = Service(executable_path=driver_path, use_selenium_manager=False)
@@ -121,25 +114,39 @@ def extraer_numero(texto):
 # --------------------------------------
 # Funciones para extraer “listings” (links)
 # --------------------------------------
-def get_remax_links(max_pages=1, headless=True, driver_path=None):
+def get_remax_links(max_pages=None, headless=True, driver_path=None):
+    """
+    Recorre todas las páginas disponibles (o hasta max_pages, si se especifica),
+    extrayendo los links de cada tarjeta de remates.
+    """
     browser = create_browser_remax(headless, driver_path)
     links = []
     wait = WebDriverWait(browser, 15)
 
-    for page in range(max_pages):
+    page = 0
+
+    while True:
         url = REMAX_LISTING_URL.format(page=page)
         print(f"[REMAX] Cargando página {page}: {url}")
         browser.get(url)
+
+        # 1) Esperamos que aparezcan las tarjetas
         try:
             wait.until(EC.presence_of_element_located((By.CLASS_NAME, "card-remax__container")))
         except:
-            print(f"[REMAX] Timeout en página {page}")
-            continue
+            print(f"[REMAX] Timeout en página {page} - posible fin de resultados")
+            break
 
+        # 2) Parseamos con BeautifulSoup
         soup = bs(browser.page_source, 'lxml')
         cards = soup.find_all("div", class_="card-remax__container")
         print(f"[REMAX] Encontradas {len(cards)} propiedades en página {page}")
 
+        # 3) Si no hay cards, rompemos (fin de resultados)
+        if not cards:
+            break
+
+        # 4) Recorremos cada “card” para extraer título + link
         for card in cards:
             titulo_tag = card.find("p", class_="card__description")
             link_tag = card.find("a", href=True)
@@ -147,25 +154,38 @@ def get_remax_links(max_pages=1, headless=True, driver_path=None):
                 titulo = safe_find_text(titulo_tag)
                 link = REMAX_BASE + link_tag["href"]
                 links.append({"Título": titulo, "Link": link})
+
+        # 5) Incrementamos página y chequeamos max_pages (si existe)
+        page += 1
+        if max_pages is not None and page >= max_pages:
+            print(f"[REMAX] Se llegó a max_pages={max_pages}, deteniendo bucle.")
+            break
+
+        # 6) Pequeña pausa para no saturar el servidor
         time.sleep(random.uniform(1, 2))
 
     browser.quit()
+
+    # Guardamos el DataFrame con todos los links
     df = pd.DataFrame(links)
     os.makedirs("data", exist_ok=True)
     df.to_csv("data/links_propiedades_remax.csv", index=False, encoding="utf-8-sig", sep=";")
     print(f"[REMAX] Guardados {len(links)} links en data/links_propiedades_remax.csv")
     return df
 
-def get_zona_links(max_pages=2, headless=False):
-    """
-    Obtiene los links de ZonaProp; aquí sí usamos undetected_chromedriver.
-    """
+
+
+def get_zona_links(max_pages=None, headless=False):
     browser = create_browser_zona(headless=headless)
     wait = WebDriverWait(browser, 15)
     links = []
+    page = 1
 
     try:
-        for page in range(1, max_pages + 1):
+        while True:
+            if max_pages and page > max_pages:
+                break
+
             url = ZONA_LISTING_URL.format(page=page)
             print(f"[ZONA] Cargando página {page}: {url}")
             browser.get(url)
@@ -174,12 +194,15 @@ def get_zona_links(max_pages=2, headless=False):
                 wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "div[data-to-posting]")))
             except Exception as e:
                 print(f"[ZONA] Timeout esperando tarjetas en la página {page}: {e}")
-                continue
+                break
 
             html = browser.page_source
             soup = bs(html, "lxml")
             tarjetas = soup.find_all("div", attrs={"data-to-posting": True})
             print(f"[ZONA] Encontradas {len(tarjetas)} propiedades en página {page}")
+
+            if not tarjetas:
+                break  # fin de páginas
 
             for tarjeta in tarjetas:
                 link_rel = tarjeta.get("data-to-posting")
@@ -187,7 +210,8 @@ def get_zona_links(max_pages=2, headless=False):
                     full_link = ZONA_BASE + link_rel
                     links.append({"Link": full_link})
 
-            time.sleep(random.uniform(1, 2))  # pequeño delay para no saturar
+            page += 1
+            time.sleep(random.uniform(1, 2))  # para no saturar
 
     except Exception as e:
         print(f"[ZONA] Error general en el scraping: {e}")
@@ -201,6 +225,7 @@ def get_zona_links(max_pages=2, headless=False):
     print(f"[ZONA] Guardados {len(links)} links en data/links_propiedades_zona.csv")
 
     return df
+
 
 
 
@@ -359,7 +384,7 @@ def scrape_details_concurrent(
         output_csv,
         max_workers=2,
         driver_path=None,
-        headless=True
+        headless=False
     ):
     """
     Reparte la lista total de URLs en ~max_workers partes, y levanta un proceso por parte.
@@ -403,8 +428,8 @@ def main():
                         help="Scrapear 'remax' o 'zona'")
     parser.add_argument("--list-only", action="store_true",
                         help="Solo extraer links, no detalles")
-    parser.add_argument("--pages", type=int, default=1,
-                        help="Cantidad de páginas a scrapear (por defecto: 1 para REMAX, 2 para Zona)")
+    parser.add_argument("--pages", type=int, default=None,
+                        help="Cantidad de páginas a scrapear (por defecto: todas)")
     parser.add_argument("--workers", type=int, default=4,
                         help="Procesos concurrentes para extraer detalles (por defecto: 4)")
     parser.add_argument("--driver-path", type=str, default=None,
@@ -412,7 +437,7 @@ def main():
     args = parser.parse_args()
 
     if args.site == "remax":
-        df_links = get_remax_links(max_pages=args.pages, headless=True, driver_path=args.driver_path)
+        df_links = get_remax_links(max_pages=args.pages, headless=False, driver_path=args.driver_path)
         if args.list_only:
             return
         urls = df_links['Link'].dropna().tolist()
@@ -422,7 +447,7 @@ def main():
             "data/detalles_remax.csv",
             max_workers=args.workers,
             driver_path=args.driver_path,
-            headless=True
+            headless=False
         )
 
     elif args.site == "zona":
@@ -433,6 +458,7 @@ def main():
         if args.list_only:
             return
         urls = df_links['Link'].dropna().tolist()
+        start_time = time.time()
         scrape_details_concurrent(
             urls,
             extract_zona_detail,
@@ -441,6 +467,8 @@ def main():
             driver_path=args.driver_path,
             headless=False
         )
+        elapsed = time.time() - start_time
+        print(f"[ZONA] Tiempo total de scrape_details_concurrent: {elapsed:.2f} segundos")
 
 if __name__ == "__main__":
     main()
