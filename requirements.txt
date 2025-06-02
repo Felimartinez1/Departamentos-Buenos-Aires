@@ -8,3 +8,4 @@ undetected-chromedriver
 requests
 beautifulsoup4
 yaml
+geopy

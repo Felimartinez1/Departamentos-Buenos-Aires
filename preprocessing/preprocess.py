@@ -113,3 +113,4 @@ def limpiar_df() -> pd.DataFrame:
 if __name__ == "__main__":
     df = limpiar_df()
     df.to_csv('data/cleaned_data.csv', index=False)
+    df.to_excel('data/cleaned_data.xlsx', index=False, engine='openpyxl', float_format="%.8f")
