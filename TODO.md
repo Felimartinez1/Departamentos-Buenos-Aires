@@ -9,8 +9,9 @@ Tareas faltantes:
 ✅ Eliminar duplicados entre zonaprop y remax
 ✅ Mejorar predictor de Expensas (antiguedad puede ayudar)
 ✅ Refactor y modularización de codigo
+✅ Inferencia en scraper (pueden ser aprox 6 horas) y preprocessing
 * Implementación de archivo de configuración
-* Inferencia en scraper (pueden ser aprox 6 horas) y preprocessing
+* Matchear expensas viejas (Alquileres.csv con detalles_zona.csv) para el nuevo archivo de zonaprop ya que no muestra las expensas.
 * Modularización e Inferencia de Geolocalización (ahora tenemos dirección y links ya desde el scraping por lo tanto hay que cambiar el codigo) 
 * Visualización en power bi
 
