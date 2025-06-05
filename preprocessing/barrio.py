@@ -45,6 +45,7 @@ BARRIOS_EQUIVALENTES = {
     "Parque Chacabuco": "Parque Chacabuco",
     "Parque Chas": "Parque Chas",
     "Núñez": "Núñez",
+    "Lomas de Núñez": "Núñez",
     "Saavedra": "Saavedra",
     "Coghlan": "Coghlan",
     "Agronomía": "Agronomía",

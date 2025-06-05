@@ -5,6 +5,10 @@ import pandas as pd
 from load_data import load_datasets
 from initial_filters import filtrar_datos_iniciales
 
+# Geolocalizacion
+from geolocalization.geolocalize import get_coords
+
+
 from imputations.expensas.feature_engineering import preparar_df_model, obtener_features_target
 from imputations.expensas.pipeline import construir_preprocessor
 from imputations.expensas.model import entrenar_modelo
@@ -107,6 +111,8 @@ def limpiar_df() -> pd.DataFrame:
     
     # Agregar Ids
     df['Id'] = range(1, len(df) + 1)
+    
+    df[['Lat', 'Lon']] = df.apply(lambda row: get_coords(row['Dirección'], row['Barrio Principal']), axis=1)
     
     return df
 

@@ -1,9 +1,22 @@
 import pandas as pd
 
 def preparar_df_model(df: pd.DataFrame) -> pd.DataFrame:
-    df_model = df[df['Expensas'].notnull()].copy()
+    df_viejo = pd.read_csv('C:/Users/Felipe/OneDrive/Escritorio/Mini Projects/Departamentos Buenos Aires/data/clean_Alquileres.csv') ### data vieja
+    df_viejo = df_viejo[df_viejo['Expensas Predichas'] == 0]
+    df_viejo.rename(columns={'Barrio': 'Barrio Principal'}, inplace=True)
+
+    df_model = df.dropna(subset=['Expensas'])
+    df_model = df_model[['Valor Alquiler(normalizado)', 'Barrio Principal', 'Dormitorios', 'Moneda', 'Cocheras', 'Ambientes', 'Baños', 'Metros Cuadrados', 'Expensas']]
+
+    # Preparar df_viejo con mismas columnas que df_model
+    df_viejo = df_viejo[['Valor Alquiler(normalizado)', 'Barrio Principal', 'Dormitorios', 'Moneda', 'Cocheras', 'Ambientes', 'Baños', 'Metros Cuadrados', 'Expensas']]
+
+    # Unir ambos
+    df_model = pd.concat([df_model, df_viejo], ignore_index=True)
+
     df_model['Expensas'] = df_model['Expensas'].astype(int)
-    df_model = df_model[(df_model['Expensas'] >= 25000) & (df_model['Expensas'] <= 1300000)]
+
+    df_model = df_model[(df_model['Expensas'] >= 25000) & (df_model['Expensas'] <= 1300000)].reset_index(drop=True)
     df_model = df_model.reset_index(drop=True)
 
     # Agrupamiento de barrios poco frecuentes

@@ -8,6 +8,7 @@ def filtrar_datos_iniciales(df: pd.DataFrame) -> pd.DataFrame:
     # Filtrar rango de Metros Cuadrados
     df = df[(df['Metros Cuadrados'] >= 15) & (df['Metros Cuadrados'] <= 1000)]
     df = df.dropna(subset=['Descripción'])
+    df.drop_duplicates()
 
 
     # Máscaras para asegurar formato adecuado de Valor Alquiler por plataforma

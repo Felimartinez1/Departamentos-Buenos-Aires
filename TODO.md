@@ -10,8 +10,8 @@ Tareas faltantes:
 ✅ Mejorar predictor de Expensas (antiguedad puede ayudar)
 ✅ Refactor y modularización de codigo
 ✅ Inferencia en scraper (pueden ser aprox 6 horas) y preprocessing
+✅ Modularización e Inferencia de Geolocalización (ahora tenemos dirección y links ya desde el scraping por lo tanto hay que cambiar el codigo) 
 * Implementación de archivo de configuración
-* Modularización e Inferencia de Geolocalización (ahora tenemos dirección y links ya desde el scraping por lo tanto hay que cambiar el codigo) 
 * Visualización en power bi
 
 
