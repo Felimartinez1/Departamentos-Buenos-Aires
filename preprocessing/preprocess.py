@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 # Importar todos los módulos que contienen las funciones
-from load_data import load_dataset
+from load_data import load_datasets
 from initial_filters import filtrar_datos_iniciales
 
 from imputations.expensas.feature_engineering import preparar_df_model, obtener_features_target
@@ -32,7 +32,7 @@ from conversion import convertir_a_enteros
 
 def limpiar_df() -> pd.DataFrame:
     # Cargar y unificar datasets
-    df = load_dataset()
+    df, df_train = load_datasets()
 
     # Reemplazar cadenas vacías por NaN
     df.replace('', np.nan, inplace=True)
@@ -73,7 +73,7 @@ def limpiar_df() -> pd.DataFrame:
     
 
     # Preparar df_model
-    df_model = preparar_df_model(df)
+    df_model = preparar_df_model(df_train)
 
     # Obtener X, y
     X, y = obtener_features_target(df_model)
