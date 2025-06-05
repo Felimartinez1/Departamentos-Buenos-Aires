@@ -3,5 +3,6 @@
 
 *.csv
 /data/*.csv
+/data/*.xlsx
 
 __pycache__
