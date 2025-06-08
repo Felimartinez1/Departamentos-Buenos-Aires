@@ -62,6 +62,35 @@ BARRIOS_EQUIVALENTES = {
     "Caballito Sur": "Caballito",
     "Villa Crespo Norte": "Villa Crespo",
     "Parque Chacabuco Norte": "Parque Chacabuco",
+    
+    # Correcciones de tildes y nombres alternativos
+    "Nuñez": "Núñez",
+    "Velez Sarsfield": "Vélez Sarsfield",
+    "Villa Ortuzar": "Villa Ortúzar",
+    "San Cristobal": "San Cristóbal",
+    "Flores Norte": "Flores",
+    "Flores Sur": "Flores",
+    "Floresta Norte": "Floresta",
+    "Floresta Sur": "Floresta",
+    "Belgrano Chico": "Belgrano",
+    "Palermo Nuevo": "Palermo",
+    "Almagro Sur": "Almagro",
+
+# Zonas específicas a considerar
+    "Congreso": "Balvanera",
+    "Tribunales": "San Nicolás",
+    "Parque Rivadavia": "Caballito",
+    "Primera Junta": "Caballito",
+    "Cid Campeador": "Caballito",
+    "Botánico": "Palermo",
+    "Distrito Quartier": "Puerto Madero",
+    "Puerto Retiro": "Retiro",
+    "Barrio Parque": "Palermo",
+    "Barrio Parque General Belgrano": "Belgrano",
+    "Naón": "Versalles",  # o Liniers según el caso
+    "Otro": np.nan,
+
+    
 }
 
 def extraer_barrio(ubicacion: str) -> str:
@@ -78,6 +107,11 @@ def extraer_barrio(ubicacion: str) -> str:
 
     return BARRIOS_EQUIVALENTES.get(barrio, barrio)
 
+def agregar_sufijo_ubicacion(df: pd.DataFrame, columna: str) -> pd.DataFrame:
+    df[columna] = df[columna].astype(str) + ", Capital Federal, Argentina"
+    return df
+
 def aplicar_extraccion_barrio(df: pd.DataFrame) -> pd.DataFrame:
     df['Barrio Principal'] = df['Barrio'].apply(extraer_barrio)
+    df = agregar_sufijo_ubicacion(df, 'Barrio Principal')
     return df
