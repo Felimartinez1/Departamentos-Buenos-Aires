@@ -12,7 +12,7 @@ Tareas faltantes:
 ✅ Inferencia en scraper (pueden ser aprox 6 horas) y preprocessing
 ✅ Modularización e Inferencia de Geolocalización (ahora tenemos dirección y links ya desde el scraping por lo tanto hay que cambiar el codigo) 
 * Implementación de archivo de configuración
-* Visualización en power bi
+✅ Visualización en power bi
 
 
 Futuro lejano:
