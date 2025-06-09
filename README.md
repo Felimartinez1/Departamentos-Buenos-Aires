@@ -39,7 +39,7 @@ Se utilizan técnicas de scraping para extraer:
 - tonymestroni@gmail.com
 
 ## Aclaraciones y Licencia
-Este proyecto es pura y exclusivamente con fines educativos y **no** comerciales.
+Este proyecto es pura y exclusivamente con fines educativos y **NO** comerciales.
 
 El código fuente de este proyecto está licenciado bajo la [Licencia MIT](LICENSE).
 
