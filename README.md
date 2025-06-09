@@ -38,5 +38,10 @@ Se utilizan técnicas de scraping para extraer:
 - felimartinez072@gmail.com
 - tonymestroni@gmail.com
 
-## Aclaraciones
-Este proyecto es pura y exclusivamente con fines educativos y no comerciales
+## Aclaraciones y Licencia
+Este proyecto es pura y exclusivamente con fines educativos y no comerciales.
+
+El código fuente de este proyecto está licenciado bajo la [Licencia MIT](LICENSE).
+
+Los datos procesados y las visualizaciones (como el dashboard de Power BI y las imágenes) están bajo licencia [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/).  
+Esto significa que podés usarlos y compartirlos libremente **con atribución**, pero **no para fines comerciales** sin autorización previa.
