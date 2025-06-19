@@ -13,7 +13,7 @@ Obtener, unificar y analizar datos de departamentos en alquiler en CABA para:
 - Facilitar la busqueda de departamentos
 - Analizar variables como precio, superficie, ubicación y amenities
 
-## Web Scraping
+## Extracción de datos
 
 Se utilizan técnicas de scraping para extraer:
 - Links de propiedades
